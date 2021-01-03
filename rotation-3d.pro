@@ -21,7 +21,6 @@ HEADERS += \
     mesh.h
 
 FORMS += \
-    glwidget.ui \
     mainwindow.ui
 
 TRANSLATIONS += \

@@ -3,38 +3,35 @@
 #include "basicmesh.h"
 
 static Mesh* cube;
-static float xAngle = 0;
-static float yAngle = 0;
-static float zAngle = 0;
+static QVector3D rotation = QVector3D(0, 0, 0);
 
 GLWidget::GLWidget(QWidget *parent) :
     QGLWidget(parent)
 {
-    cube = createCube(0.5);
+    cube = createCubeQUADS(0.5);
 }
 
 void GLWidget::initializeGL()
 {
-
-    glClearColor(0.3, 0.3, 0.3, 1.0);
-    glClearDepth(1.0);
+    glClearColor(1, 1, 1, 1);
+    glClearDepth(1);
 
     /* Use depth buffering for hidden surface elimination. */
     glEnable(GL_DEPTH_TEST);
 
     // Light settings
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
+//    glEnable(GL_LIGHTING);
+//    glEnable(GL_LIGHT0);
 
-    GLfloat light_position[] = { -50.0, 50.0, 50.0, 1.0 };
-    GLfloat light_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
-    GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+//    GLfloat light_position[] = { -50.0, 50.0, 50.0, 1.0 };
+//    GLfloat light_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
+//    GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+//    GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 
-    glLightfv( GL_LIGHT0, GL_POSITION, light_position );
-    glLightfv( GL_LIGHT0, GL_AMBIENT, light_ambient );
-    glLightfv( GL_LIGHT0, GL_DIFFUSE, light_diffuse );
-    glLightfv( GL_LIGHT0, GL_SPECULAR, light_specular );
+//    glLightfv( GL_LIGHT0, GL_POSITION, light_position );
+//    glLightfv( GL_LIGHT0, GL_AMBIENT, light_ambient );
+//    glLightfv( GL_LIGHT0, GL_DIFFUSE, light_diffuse );
+//    glLightfv( GL_LIGHT0, GL_SPECULAR, light_specular );
 
     glRotatef(-90, 1.0, 0.0, 0.0);
     glRotatef(-90, 0.0, 0.0, 1.0);
@@ -58,15 +55,23 @@ void drawBox(GLfloat position[3])
     glTranslatef(position[0], position[1], position[2]);
 
     {
-        GLfloat color[] = { 1.0, 0.0, 1.0, 1.0 };
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
+//        GLfloat fillColor[] = { 1.0, 1.0, 1.0, 1.0 };
+//        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, fillColor);
 
         Mesh *mesh = cube;
-        for (unsigned i=0; i < mesh->numIndices; i+=3) {
-            glBegin(GL_TRIANGLES);
-            for (int j=0; j<3; j++) {
+        for (unsigned i=0; i < mesh->numIndices; i+=4) {
+            glColor3f(1, 1, 1);
+            glBegin(GL_QUADS);;
+            for (int j=0; j<4; j++) {
                 VertexData &v = mesh->vertices[mesh->indices[i+j]];
-                glNormal3f(v.normal.x(), v.normal.y(), v.normal.z());
+//                glNormal3f(v.normal.x(), v.normal.y(), v.normal.z());
+                glVertex3f(v.position.x(), v.position.y(), v.position.z());
+            }
+            glEnd();
+            glColor3f(0, 0, 0);
+            glBegin(GL_LINE_LOOP);
+            for (int j=0; j<4; j++) {
+                VertexData &v = mesh->vertices[mesh->indices[i+j]];
                 glVertex3f(v.position.x(), v.position.y(), v.position.z());
             }
             glEnd();
@@ -119,7 +124,6 @@ void GLWidget::paintGL()
     //Camera
     QMatrix4x4 m;
     m.lookAt(QVector3D(3, 6, 3),
-//    m.lookAt(QVector3D(7.0, 8.0, 9.0),
              QVector3D(0.0, 0.0, 0.0),
              QVector3D(0.0, 1.0, 0.0) );
     glMultMatrixf(m.data());
@@ -128,13 +132,14 @@ void GLWidget::paintGL()
 
     glPushMatrix();
 
-    glRotatef(xAngle, 1, 0, 0);
-    glRotatef(yAngle, 0, 1, 0);
-    glRotatef(zAngle, 0, 0, 1);
+    glRotatef(rotation.x(), 1, 0, 0);
+    glRotatef(rotation.y(), 0, 1, 0);
+    glRotatef(rotation.z(), 0, 0, 1);
 
-    GLfloat positionFrontBox[3] = { 0, 1, 0};
-    GLfloat positionTopBox[3] = { 0, 0, 1};
-    GLfloat positionRightBox[3] = { 1, 0, 0};
+    float offset = 0.01;
+    GLfloat positionFrontBox[3] = { 0, 1 + offset, 0};
+    GLfloat positionTopBox[3] = { 0, 0, 1 + offset};
+    GLfloat positionRightBox[3] = { 1 + offset, 0, 0};
 
     drawBox(positionFrontBox);
     drawBox(positionTopBox);
@@ -143,22 +148,20 @@ void GLWidget::paintGL()
     glPopMatrix();
 }
 
-void GLWidget::keyPressEvent(QKeyEvent *event)
+void GLWidget::setXRotation(int angle)
 {
-    if(event->key() == Qt::Key_X)
-    {
-        xAngle += 1;
-    }
+    rotation.setX(angle);
+    updateGL();
+}
 
-    if(event->key() == Qt::Key_Y)
-    {
-        yAngle += 1;
-    }
+void GLWidget::setYRotation(int angle)
+{
+    rotation.setY(angle);
+    updateGL();
+}
 
-    if(event->key() == Qt::Key_Z)
-    {
-        zAngle += 1;
-    }
-
-    update();
+void GLWidget::setZRotation(int angle)
+{
+    rotation.setZ(angle);
+    updateGL();
 }

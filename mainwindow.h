@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSlider>
+#include <QHBoxLayout>
 
 #include "glwidget.h"
 
@@ -19,6 +21,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    GLWidget mView;
+    GLWidget *glWidget;
+    QSlider *xSlider;
+    QSlider *ySlider;
+    QSlider *zSlider;
+
+    QSlider *createSlider();
 };
 #endif // MAINWINDOW_H

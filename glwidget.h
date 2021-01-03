@@ -13,7 +13,11 @@ protected:
     void initializeGL();
     void resizeGL(int w, int h);
     void paintGL();
-    void keyPressEvent(QKeyEvent *event);
+
+public slots:
+    void setXRotation(int angle);
+    void setYRotation(int angle);
+    void setZRotation(int angle);
 };
 
 #endif // GLVIEW_HPP

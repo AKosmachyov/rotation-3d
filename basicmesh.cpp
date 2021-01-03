@@ -54,3 +54,35 @@ Mesh* createCube( float half )
 
   return Mesh::create(vertices, numVertices, indices, numIndices);
 }
+
+Mesh* createCubeQUADS( float half )
+{
+  float sx = 1.0f * half;
+  float sy = 1.0f * half;
+  float sz = 1.0f * half;
+
+  GLushort numVertices = 8;
+  GLushort numIndices = 24;
+
+  VertexData vertices[] = {
+      { QVector3D(-sx, -sy, -sz), QVector3D(+0.0f, -1.0f, +0.0f), QVector2D(0.0f, 0.0f) },
+      { QVector3D(sx, -sy, -sz), QVector3D(+0.0f, -1.0f, +0.0f), QVector2D(0.0f, 0.0f) },
+      { QVector3D(sx, sy, -sz), QVector3D(+0.0f, -1.0f, +0.0f), QVector2D(0.0f, 0.0f) },
+      { QVector3D(-sx, sy, -sz), QVector3D(+0.0f, -1.0f, +0.0f), QVector2D(0.0f, 0.0f) },
+      { QVector3D(-sx, -sy, sz), QVector3D(+0.0f, -1.0f, +0.0f), QVector2D(0.0f, 0.0f) },
+      { QVector3D(-sx, sy, sz), QVector3D(+0.0f, -1.0f, +0.0f), QVector2D(0.0f, 0.0f) },
+      { QVector3D(sx, -sy, sz), QVector3D(+0.0f, -1.0f, +0.0f), QVector2D(0.0f, 0.0f) },
+      { QVector3D(sx, sy, sz), QVector3D(+0.0f, -1.0f, +0.0f), QVector2D(0.0f, 0.0f) }
+  };
+
+  GLushort indices[] = {
+      0, 1, 2, 3,
+      0, 4, 5, 3,
+      6, 1, 2, 7,
+      0, 1, 6, 4,
+      4, 6, 7, 5,
+      5, 3, 2, 7
+  };
+
+  return Mesh::create(vertices, numVertices, indices, numIndices);
+}
