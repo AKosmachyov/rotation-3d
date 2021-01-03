@@ -13,6 +13,7 @@ protected:
     void initializeGL();
     void resizeGL(int w, int h);
     void paintGL();
+    void keyPressEvent(QKeyEvent *event);
 };
 
 #endif // GLVIEW_HPP

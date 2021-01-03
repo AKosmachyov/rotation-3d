@@ -3,6 +3,9 @@
 #include "basicmesh.h"
 
 static Mesh* cube;
+static float xAngle = 0;
+static float yAngle = 0;
+static float zAngle = 0;
 
 GLWidget::GLWidget(QWidget *parent) :
     QGLWidget(parent)
@@ -123,6 +126,12 @@ void GLWidget::paintGL()
 
     drawAxes();
 
+    glPushMatrix();
+
+    glRotatef(xAngle, 1, 0, 0);
+    glRotatef(yAngle, 0, 1, 0);
+    glRotatef(zAngle, 0, 0, 1);
+
     GLfloat positionFrontBox[3] = { 0, 1, 0};
     GLfloat positionTopBox[3] = { 0, 0, 1};
     GLfloat positionRightBox[3] = { 1, 0, 0};
@@ -130,4 +139,26 @@ void GLWidget::paintGL()
     drawBox(positionFrontBox);
     drawBox(positionTopBox);
     drawBox(positionRightBox);
+
+    glPopMatrix();
+}
+
+void GLWidget::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_X)
+    {
+        xAngle += 1;
+    }
+
+    if(event->key() == Qt::Key_Y)
+    {
+        yAngle += 1;
+    }
+
+    if(event->key() == Qt::Key_Z)
+    {
+        zAngle += 1;
+    }
+
+    update();
 }
