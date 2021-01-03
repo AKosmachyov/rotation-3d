@@ -10,17 +10,18 @@ CONFIG += c++11
 
 SOURCES += \
     basicmesh.cpp \
-    glview.cpp \
+    glwidget.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     basicmesh.h \
-    glview.hpp \
+    glwidget.h \
     mainwindow.h \
     mesh.h
 
 FORMS += \
+    glwidget.ui \
     mainwindow.ui
 
 TRANSLATIONS += \

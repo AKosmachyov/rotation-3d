@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "glview.hpp"
+#include "glwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,6 +19,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    glView mView;
+    GLWidget mView;
 };
 #endif // MAINWINDOW_H
